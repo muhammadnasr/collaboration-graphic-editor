@@ -1,0 +1,15 @@
+.editor {
+  position: relative;
+  width: 500px;
+  height: 500px;
+
+  margin: 4px;
+
+  overflow: hidden;
+
+  border: 1px solid #ccc;
+}
+
+.object {
+  cursor: pointer;
+}
