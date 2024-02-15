@@ -116,7 +116,7 @@ Open [http://localhost:6006](http://localhost:6006) to view it in the browser.
 
 The page will reload if you make edits.
 
-### `yarn start:server` or `npm start:server`
+### `yarn start:server` or `npm run start:server`
 
 Will run server on your computer.
 
