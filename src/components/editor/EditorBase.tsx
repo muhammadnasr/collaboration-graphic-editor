@@ -1,25 +1,31 @@
 import React from "react";
-import { DesignObject, DesignState } from "../../types";
+import { Cursor, DesignObject, Design } from "../../types";
 import BasicObject from "./BasicShape";
+import CursorContainer from "./CursorContainer"; 
 
 export interface BasicEditorProps {
-  state: DesignState | null;
+  design: Design | null;
   onObjectUpdate(objectData: DesignObject): void;
+  onCursorUpdate(cursor: Cursor): void;
 }
 
 /**
  * This component is responsible for providing basic editor functionality
  */
-const EditorBase: React.FC<BasicEditorProps> = ({ state, onObjectUpdate }) => {
+const EditorBase: React.FC<BasicEditorProps> = ({ design, onObjectUpdate, onCursorUpdate }) => {
   const handleObjectUpdate = (objectData: DesignObject) => {
     onObjectUpdate(objectData);
   };
 
-  if (!state) return null;
+  const handleCursorUpdate = (cursor: Cursor) => {
+    onCursorUpdate(cursor);
+  };
+
+  if (!design) return null;
 
   return (
     <div className="editor">
-      {state.objects.map((object) => {
+      {design.objects.map((object: DesignObject) => {
         return (
           <BasicObject
             key={object.id}
@@ -28,6 +34,7 @@ const EditorBase: React.FC<BasicEditorProps> = ({ state, onObjectUpdate }) => {
           />
         );
       })}
+      <CursorContainer design={design} onCursorUpdate={handleCursorUpdate}/>
     </div>
   );
 };

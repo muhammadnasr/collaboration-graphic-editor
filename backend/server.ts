@@ -3,11 +3,11 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
 
-import { DesignObject, DesignState } from "../src/types";
+import { DesignObject, Design, Cursor } from "../src/types";
 
 const PORT = process.env.PORT || 3030;
 
-const DEFAULT_STATE: DesignState = {
+const DEFAULT_STATE: Design = {
   objects: [
     {
       id: "1",
@@ -24,6 +24,7 @@ const DEFAULT_STATE: DesignState = {
       color: "blue",
     },
   ],
+  cursors: {},
 };
 
 const app = express();
@@ -35,7 +36,7 @@ const io = new Server(server, {
 });
 
 // in memory object to store design data
-const DESIGNS: { [key: string]: DesignState } = {};
+const DESIGNS: { [key: string]: Design } = {};
 
 app.use(cors());
 
@@ -70,8 +71,8 @@ io.on("connection", (socket: Socket) => {
   // send current design state to client
   socket.emit("design", design);
 
-  // handle design updates
-  socket.on("update", (designId: string, objectData: DesignObject) => {
+  // handle design object updates
+  socket.on("updateObject", (designId: string, updatedObject: DesignObject) => {
     if (!DESIGNS[designId]) {
       // log that design doesn't exist
       console.log("Received update for design that doesn't exist");
@@ -79,11 +80,23 @@ io.on("connection", (socket: Socket) => {
     }
     // update the design state
     DESIGNS[designId].objects = DESIGNS[designId].objects.map((object) => {
-      if (object.id === objectData.id) {
-        return objectData;
+      if (object.id === updatedObject.id) {
+        return updatedObject;
       }
       return object;
     });
+    socket.to(`design ${designId}`).emit("design", DESIGNS[designId]);
+  });
+
+  // handle design cursor updates
+  socket.on("updateCursor", (designId: string, designerName: string, updatedCursor: Cursor) => {
+    if (!DESIGNS[designId]) {
+      // log that design doesn't exist
+      console.log("Received update for design that doesn't exist");
+      return;
+    }
+    //TODO: emit cursor change only...
+    DESIGNS[designId].cursors[designerName] = updatedCursor;
     socket.to(`design ${designId}`).emit("design", DESIGNS[designId]);
   });
 

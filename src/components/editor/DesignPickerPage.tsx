@@ -6,6 +6,8 @@ import { useStore } from "../../stores/main";
  * or creating a new one
  */
 const DesignPickerPage: React.FC = () => {
+  const designerName = useStore((state) => state.designerName);
+  const setDesignerName = useStore((state) => state.setDesignerName);
   const setDesignId = useStore((state) => state.setDesignId);
   const [newDesignId, setNewDesignId] = useState<string>("");
 
@@ -18,8 +20,20 @@ const DesignPickerPage: React.FC = () => {
 
   return (
     <>
-      <h1>Please provide a design id to edit or create a new one</h1>
+      <h1>Please provide your name and a design id to edit or create a new one</h1>
 
+      <label htmlFor="designerName">
+        Name:
+        <input
+          value={designerName}
+          onChange={(e) => {
+            setDesignerName(e.target.value);
+          }}
+          type="text"
+          id="designerName"
+        />
+      </label>   
+      <br />
       <label htmlFor="designId">
         Design Id:
         <input

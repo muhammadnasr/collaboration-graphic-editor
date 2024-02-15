@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useStore } from "../../stores/main";
 import io, { Socket } from "socket.io-client";
-import { DesignObject, DesignState } from "../../types";
+import { DesignObject, Design, Cursor } from "../../types";
 import BasicEditor from "./EditorBase";
 
 interface EditorPageProps {
@@ -15,10 +15,10 @@ const SERVER_URL = "http://localhost:3030";
  * or creating a new one
  */
 const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
-  const stateDesignId = useStore((state) => state.designId);
-  const designState = useStore((state) => state.designState);
+  const designerName = useStore((state) => state.designerName);
   const setDesignId = useStore((state) => state.setDesignId);
-  const setDesignState = useStore((state) => state.setDesignState);
+  const design = useStore((state) => state.design);
+  const setDesign = useStore((state) => state.setDesign);
   const leaveDesign = useStore((state) => state.leaveDesign);
 
   const serverSocket = useRef<Socket | null>(null);
@@ -29,24 +29,29 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
     serverSocket.current = null;
   };
 
-  const handleObjectUpdate = (objectData: DesignObject) => {
-    if (designState === null) return;
-    serverSocket.current?.emit("update", stateDesignId, objectData);
+  const handleObjectUpdate = (updatedObject: DesignObject) => {
+    if (design === null) return;
+    serverSocket.current?.emit("updateObject", designId, updatedObject);
+  };
+
+  const handleCursorUpdate = (updatedCursor: Cursor) => {
+    if (design === null) return;
+    serverSocket.current?.emit("updateCursor", designId, designerName, updatedCursor);
   };
 
   useEffect(() => {
     const socket = io(SERVER_URL, {
-      query: { designId },
+      query: { designId, designerName },
     });
 
-    socket.on("design", (serverDesign: DesignState) => {
+    socket.on("design", (serverDesign: Design) => {
       if (serverDesign.id && serverDesign.id !== designId) {
         // if server design id is different from the one we have
         // then we should update the state
         // this is to handle the case when we create a new design
         setDesignId(serverDesign.id);
       }
-      setDesignState(serverDesign);
+      setDesign(serverDesign);
     });
 
     serverSocket.current = socket;
@@ -55,17 +60,17 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
       socket.disconnect();
       serverSocket.current = null;
     };
-  }, [designId, setDesignId, stateDesignId, setDesignState]);
+  }, [designId, setDesignId, setDesign, designerName]);
 
   return (
     <>
       <h1>
-        Welcome to {designId}{" "}
+        Welcome {designerName} to {designId}{" "}
         <button onClick={() => navigator.clipboard.writeText(designId)}>
           copy id
         </button>
       </h1>
-      <BasicEditor state={designState} onObjectUpdate={handleObjectUpdate} />
+      <BasicEditor design={design} onObjectUpdate={handleObjectUpdate} onCursorUpdate={handleCursorUpdate} />
       <button onClick={handleLeaveDesign}>Leave</button>
     </>
   );

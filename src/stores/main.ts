@@ -1,18 +1,22 @@
 import { create } from "zustand";
-import { DesignState } from "../types";
+import { Design } from "../types";
 
 interface State {
+  designerName: string;
+  setDesignerName: (designerName: string) => void;
   designId: string | null;
   setDesignId: (designId: string) => void;
-  setDesignState: (designState: DesignState) => void;
+  design: Design | null;
+  setDesign: (design: Design) => void;
   leaveDesign: () => void;
-  designState: DesignState | null;
 }
 
 export const useStore = create<State>((set) => ({
-  designState: null,
+  designerName: "anonymous",
+  setDesignerName: (designerName) => set(() => ({ designerName })),
   designId: null,
   setDesignId: (designId) => set(() => ({ designId })),
-  setDesignState: (designState) => set(() => ({ designState })),
-  leaveDesign: () => set(() => ({ designId: null, designState: null })),
+  design: null,
+  setDesign: (design) => set(() => ({ design })),
+  leaveDesign: () => set(() => ({ designId: null, design: null })),
 }));
