@@ -37,11 +37,15 @@ const io = new Server(server, {
 
 // in memory object to store design data
 const DESIGNS: { [key: string]: Design } = {};
+let userIdCounter = 1; 
 
 app.use(cors());
 
 io.on("connection", (socket: Socket) => {
-  console.log("A user connected");
+
+  const userId = userIdCounter++;
+
+  console.log("A user connected, userId: " + userId);
 
   let designId = socket.handshake.query.designId;
   if (!designId) {
@@ -59,6 +63,7 @@ io.on("connection", (socket: Socket) => {
     designId = socket.id;
     // initialize design state
     DESIGNS[designId] = { ...DEFAULT_STATE };
+    DESIGNS[designId].cursors = {};
 
     console.log("New design created: " + designId);
   }
@@ -69,7 +74,7 @@ io.on("connection", (socket: Socket) => {
   design.id = designId;
 
   // send current design state to client
-  socket.emit("design", design);
+  socket.emit("design", design, userId);
 
   // handle design object updates
   socket.on("updateObject", (designId: string, updatedObject: DesignObject) => {
@@ -89,14 +94,15 @@ io.on("connection", (socket: Socket) => {
   });
 
   // handle design cursor updates
-  socket.on("updateCursor", (designId: string, designerName: string, updatedCursor: Cursor) => {
+  socket.on("updateCursor", (designId: string, updatedCursor: Cursor) => {
     if (!DESIGNS[designId]) {
       // log that design doesn't exist
       console.log("Received update for design that doesn't exist");
       return;
     }
-    //TODO: emit cursor change only...
-    DESIGNS[designId].cursors[designerName] = updatedCursor;
+    //TODO: emit changed cursor only...
+    DESIGNS[designId].cursors[updatedCursor.userId] = updatedCursor;
+    console.log("Received cursor update: ", updatedCursor,DESIGNS[designId],DEFAULT_STATE);
     socket.to(`design ${designId}`).emit("design", DESIGNS[designId]);
   });
 

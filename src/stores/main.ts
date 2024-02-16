@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { Design } from "../types";
 
 interface State {
-  designerName: string;
-  setDesignerName: (designerName: string) => void;
+  currentUserId: number | null;
+  setCurrentUserId: (currentUserId: number) => void;
   designId: string | null;
   setDesignId: (designId: string) => void;
   design: Design | null;
@@ -12,8 +12,8 @@ interface State {
 }
 
 export const useStore = create<State>((set) => ({
-  designerName: "anonymous",
-  setDesignerName: (designerName) => set(() => ({ designerName })),
+  currentUserId: null,
+  setCurrentUserId: (currentUserId) => set(() => ({ currentUserId })),
   designId: null,
   setDesignId: (designId) => set(() => ({ designId })),
   design: null,

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { useStore } from "../../stores/main";
 import io, { Socket } from "socket.io-client";
 import { DesignObject, Design, Cursor } from "../../types";
-import BasicEditor from "./EditorBase";
+import BasicEditor from "./BasicEditor";
 
 interface EditorPageProps {
   designId: string;
@@ -15,7 +15,8 @@ const SERVER_URL = "http://localhost:3030";
  * or creating a new one
  */
 const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
-  const designerName = useStore((state) => state.designerName);
+  const currentUserId = useStore((state) => state.currentUserId);
+  const setCurrentUserId = useStore((state) => state.setCurrentUserId);
   const setDesignId = useStore((state) => state.setDesignId);
   const design = useStore((state) => state.design);
   const setDesign = useStore((state) => state.setDesign);
@@ -36,15 +37,22 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
 
   const handleCursorUpdate = (updatedCursor: Cursor) => {
     if (design === null) return;
-    serverSocket.current?.emit("updateCursor", designId, designerName, updatedCursor);
+    serverSocket.current?.emit("updateCursor", designId, updatedCursor);
   };
 
   useEffect(() => {
     const socket = io(SERVER_URL, {
-      query: { designId, designerName },
+      query: { designId },
     });
 
-    socket.on("design", (serverDesign: Design) => {
+    console.log("Connecting to server with designId: " + designId);
+
+    socket.on("design", (serverDesign: Design, currentUserId: number) => {
+      console.log("design receive designId: ", designId, currentUserId);
+
+      if(currentUserId){
+        setCurrentUserId(currentUserId);
+      }
       if (serverDesign.id && serverDesign.id !== designId) {
         // if server design id is different from the one we have
         // then we should update the state
@@ -60,17 +68,18 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
       socket.disconnect();
       serverSocket.current = null;
     };
-  }, [designId, setDesignId, setDesign, designerName]);
+    //need to add empty dependency array to avoid multiple connections
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
       <h1>
-        Welcome {designerName} to {designId}{" "}
+        Welcome to {designId}{" "}
         <button onClick={() => navigator.clipboard.writeText(designId)}>
           copy id
         </button>
       </h1>
-      <BasicEditor design={design} onObjectUpdate={handleObjectUpdate} onCursorUpdate={handleCursorUpdate} />
+      <BasicEditor currentUserId={currentUserId} design={design} onObjectUpdate={handleObjectUpdate} onCursorUpdate={handleCursorUpdate} />
       <button onClick={handleLeaveDesign}>Leave</button>
     </>
   );

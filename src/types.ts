@@ -1,5 +1,6 @@
-//should be name "Object" according to our conventions but "Object" is reserved
+//DesignObject should be named "Object" according to our conventions but "Object" type is reserved
 //TODO: think of another name
+
 export type DesignObject = {
   id: string;
   type: string;
@@ -8,8 +9,8 @@ export type DesignObject = {
   color: string;
 };
 
-interface CursorsMap {
-  [key: string]: Cursor;
+export interface CursorsMap {
+  [key: number]: Cursor;
 }
 
 export type Design = {
@@ -19,7 +20,7 @@ export type Design = {
 };
 
 export type Cursor = {
-  id?: string;
+  userId: number;
   x: number;
   y: number;
 };

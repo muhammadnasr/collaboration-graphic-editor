@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Editor from "../components/Editor";
+import EditorApp from "../components/EditorApp";
 
 const meta = {
   title: "Editor",
-  component: Editor,
-} satisfies Meta<typeof Editor>;
+  component: EditorApp,
+} satisfies Meta<typeof EditorApp>;
 
 export default meta;
 
-type Story = StoryObj<typeof Editor>;
+type Story = StoryObj<typeof EditorApp>;
 
 export const Default: Story = {};

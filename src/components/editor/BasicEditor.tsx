@@ -1,9 +1,10 @@
 import React from "react";
 import { Cursor, DesignObject, Design } from "../../types";
 import BasicObject from "./BasicShape";
-import CursorContainer from "./CursorContainer"; 
+import CursorContainer from "../Cursor/CursorContainer"; 
 
 export interface BasicEditorProps {
+  currentUserId: number | null;
   design: Design | null;
   onObjectUpdate(objectData: DesignObject): void;
   onCursorUpdate(cursor: Cursor): void;
@@ -12,7 +13,7 @@ export interface BasicEditorProps {
 /**
  * This component is responsible for providing basic editor functionality
  */
-const EditorBase: React.FC<BasicEditorProps> = ({ design, onObjectUpdate, onCursorUpdate }) => {
+const BasicEditor: React.FC<BasicEditorProps> = ({ currentUserId, design, onObjectUpdate, onCursorUpdate }) => {
   const handleObjectUpdate = (objectData: DesignObject) => {
     onObjectUpdate(objectData);
   };
@@ -34,9 +35,9 @@ const EditorBase: React.FC<BasicEditorProps> = ({ design, onObjectUpdate, onCurs
           />
         );
       })}
-      <CursorContainer design={design} onCursorUpdate={handleCursorUpdate}/>
+      <CursorContainer currentUserId={currentUserId as number} cursors={design.cursors} onCursorUpdate={handleCursorUpdate} />
     </div>
   );
 };
 
-export default EditorBase;
+export default BasicEditor;
