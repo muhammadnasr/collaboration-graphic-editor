@@ -44,8 +44,8 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
       const cursorLeft = cursor.x - nameElement.offsetWidth;
 
       if (cursorRight - parentOffsetX > rect.width) {
-        nameElement.style.right = `${rect.width - cursor.x + parentOffsetX}px`;
         nameElement.style.left = 'auto';
+        nameElement.style.right = `${rect.width - cursor.x + parentOffsetX}px`;
       } else if (cursorLeft - parentOffsetX < 0) {
         nameElement.style.left = `${cursor.x - parentOffsetX + CURSOR_NAME_OFFSET_PX}px`;
         nameElement.style.right = 'auto';
