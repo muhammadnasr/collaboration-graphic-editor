@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Cursor } from "../../types";
 
-const MAX_CURSORS = 5;
+const MAX_CURSORS_COUNT = 5;
+const CURSOR_NAME_OFFSET_PX = 17;
 
 const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
 
@@ -39,23 +40,26 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
       const parentOffsetY = rect.top + window.scrollY;
       setParentOffset({ x: parentOffsetX, y: parentOffsetY });
 
-      if (cursor.x + nameElement.offsetWidth - parentOffsetX > rect.width) {
-        nameElement.style.right = '0';
+      const cursorRight = cursor.x + nameElement.offsetWidth;
+      const cursorLeft = cursor.x - nameElement.offsetWidth;
+
+      if (cursorRight - parentOffsetX > rect.width) {
+        nameElement.style.right = `${rect.width - cursor.x + parentOffsetX}px`;
         nameElement.style.left = 'auto';
-      } else if (cursor.x - nameElement.offsetWidth - parentOffsetX < 0) {
-        nameElement.style.left = '0';
+      } else if (cursorLeft - parentOffsetX < 0) {
+        nameElement.style.left = `${cursor.x - parentOffsetX + CURSOR_NAME_OFFSET_PX}px`;
         nameElement.style.right = 'auto';
       } else {
-        nameElement.style.left = `${cursor.x - parentOffsetX + 17}px`;
+        nameElement.style.left = `${cursor.x - parentOffsetX + CURSOR_NAME_OFFSET_PX}px`;
         nameElement.style.right = 'auto';
       }
 
       // Adjust the top position of the name element
-      nameElement.style.top = `${cursor.y - parentOffsetY + 17}px`;
+      nameElement.style.top = `${cursor.y - parentOffsetY + CURSOR_NAME_OFFSET_PX}px`;
     }
   }, [showName, cursor]);
 
-  const cursorIndex = cursor.userId % MAX_CURSORS;
+  const cursorIndex = cursor.userId % MAX_CURSORS_COUNT;
   const nameBackgroundColors = ["#1570EF", "#039855", "#DC6803", "#DD2590", "#7CD4FD"];
 
   return (
