@@ -1,7 +1,8 @@
 //DesignObject should be named "Object" according to our conventions but "Object" type is reserved
-//TODO: think of another name
+//TODO: Rename it to Shape or Element
 
 export type DesignObject = {
+  selectedBy?: number | null;
   id: string;
   type: string;
   top: number;

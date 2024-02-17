@@ -15,6 +15,7 @@ const DEFAULT_STATE: Design = {
       top: 0,
       left: 0,
       color: "magenta",
+      selectedBy: null
     },
     {
       id: "2",
@@ -22,6 +23,7 @@ const DEFAULT_STATE: Design = {
       top: 50,
       left: 50,
       color: "blue",
+      selectedBy: null
     },
   ],
   cursors: {},
