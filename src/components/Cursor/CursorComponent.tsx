@@ -46,12 +46,12 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
         nameElement.style.left = '0';
         nameElement.style.right = 'auto';
       } else {
-        nameElement.style.left = `${cursor.x - parentOffsetX}px`;
+        nameElement.style.left = `${cursor.x - parentOffsetX + 17}px`;
         nameElement.style.right = 'auto';
       }
 
       // Adjust the top position of the name element
-      nameElement.style.top = `${cursor.y - parentOffsetY + 26}px`;
+      nameElement.style.top = `${cursor.y - parentOffsetY + 17}px`;
     }
   }, [showName, cursor]);
 
@@ -80,7 +80,6 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           className="nameBox"
           style={{
             position: 'absolute',
-            top: cursor.y - parentOffset.y + 26, // Adjust the top position
             width: 64,
             height: 32,
             color: "white",
