@@ -48,7 +48,6 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
     console.log("Connecting to server with designId: " + designId);
 
     socket.on("design", (serverDesign: Design, currentUserId: number) => {
-      console.log("design receive designId: ", designId, currentUserId);
 
       if(currentUserId){
         setCurrentUserId(currentUserId);
@@ -65,6 +64,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
     serverSocket.current = socket;
 
     return () => {
+      //TODO: remove user cursor from server on disconnect
       socket.disconnect();
       serverSocket.current = null;
     };

@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Cursor} from "../../types";
+import { Cursor } from "../../types";
 
 const MAX_CURSORS = 5;
 
 const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
-  const [showName, setShowName] = useState(true);
+
   const parentRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLDivElement | null>(null);
+
+  const [showName, setShowName] = useState(true);
   const [parentOffset, setParentOffset] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -43,13 +45,8 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
     }
   }, [showName, cursor]);
 
-  const cursorImageIndex = cursor.userId % MAX_CURSORS;
-
-  const nameBackgroundColor = cursorImageIndex === 1 ? "#039855" :
-    cursorImageIndex === 2 ? "#DC6803" :
-    cursorImageIndex === 3 ? "#039855" :
-    cursorImageIndex === 4 ? "#DC6803" :
-    cursorImageIndex === 5 ? "#039855" : "";
+  const cursorIndex = cursor.userId % MAX_CURSORS;
+  const nameBackgroundColors = ["#1570EF", "#039855", "#DC6803", "#DD2590", "#7CD4FD"];
 
   return (
     <div ref={parentRef} style={{ position: "relative" }}>
@@ -60,7 +57,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           top: cursor.y - parentOffset.y,
           width: 20,
           height: 20,
-          backgroundImage: `url(./images/cursors/cursor${cursor.userId % MAX_CURSORS}.png)`,
+          backgroundImage: `url(./images/cursors/cursor${cursorIndex}.png)`,
           backgroundSize: "cover",
           overflow: "hidden",
         }}
@@ -72,15 +69,16 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           style={{
             position: 'absolute',
             top: cursor.y - parentOffset.y + 26, // Adjust the top position
-            width: 83,
-            height: 40,
-            backgroundColor: nameBackgroundColor,
+            width: 64,
+            height: 32,
+            color: "white",
+            backgroundColor: nameBackgroundColors[cursorIndex],
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          User {cursor.userId}
+          User {cursor.userId + 1}
         </div>
       )}
     </div>

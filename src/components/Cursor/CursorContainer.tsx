@@ -11,7 +11,6 @@ export interface CursorContainerProps {
 const CursorContainer: React.FC<CursorContainerProps> = ({ currentUserId, cursors, onCursorUpdate }) => {
 
   useEffect(() => {
-    console.log("use effect mousemove");
     const handleMouseMove = (event: MouseEvent) => {
       onCursorUpdate({ userId: currentUserId, x: event.clientX, y: event.clientY });
     };

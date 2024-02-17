@@ -37,7 +37,7 @@ const io = new Server(server, {
 
 // in memory object to store design data
 const DESIGNS: { [key: string]: Design } = {};
-let userIdCounter = 1; 
+let userIdCounter = 0; 
 
 app.use(cors());
 
@@ -63,6 +63,7 @@ io.on("connection", (socket: Socket) => {
     designId = socket.id;
     // initialize design state
     DESIGNS[designId] = { ...DEFAULT_STATE };
+    //need to clear cursors map otherwise it will be shared between different designs
     DESIGNS[designId].cursors = {};
 
     console.log("New design created: " + designId);
@@ -102,7 +103,6 @@ io.on("connection", (socket: Socket) => {
     }
     //TODO: emit changed cursor only...
     DESIGNS[designId].cursors[updatedCursor.userId] = updatedCursor;
-    console.log("Received cursor update: ", updatedCursor,DESIGNS[designId],DEFAULT_STATE);
     socket.to(`design ${designId}`).emit("design", DESIGNS[designId]);
   });
 
