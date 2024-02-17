@@ -37,17 +37,17 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
     const parentElement = parentRef.current;
     const nameBoxElement = nameBoxRef.current;
     if (parentElement && nameBoxElement) {
-      const parentBoundingClientRect = parentElement.getBoundingClientRect();
-      const parentOffsetX = parentBoundingClientRect.left + window.scrollX;
-      const parentOffsetY = parentBoundingClientRect.top + window.scrollY;
+      const parentRect = parentElement.getBoundingClientRect();
+      const parentOffsetX = parentRect.left + window.scrollX;
+      const parentOffsetY = parentRect.top + window.scrollY;
       setParentOffset({ x: parentOffsetX, y: parentOffsetY });
 
       const cursorRight = cursor.x + nameBoxElement.offsetWidth;
       const cursorLeft = cursor.x - nameBoxElement.offsetWidth;
 
-      if (cursorRight - parentOffsetX > parentBoundingClientRect.width) {
+      if (cursorRight - parentOffsetX > parentRect.width) {
         nameBoxElement.style.left = 'auto';
-        nameBoxElement.style.right = `${parentBoundingClientRect.width - cursor.x + parentOffsetX}px`;
+        nameBoxElement.style.right = `${parentRect.width - cursor.x + parentOffsetX}px`;
       } else if (cursorLeft - parentOffsetX < 0) {
         nameBoxElement.style.left = `${cursor.x - parentOffsetX + CURSOR_NAME_BOX_OFFSET_PX}px`;
         nameBoxElement.style.right = 'auto';
