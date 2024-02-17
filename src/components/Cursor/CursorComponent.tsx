@@ -74,7 +74,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           backgroundImage: `url(./images/cursors/cursor${cursorIndex}.png)`,
           backgroundSize: "cover",
           overflow: "hidden",
-          transition: 'opacity 1s',
+          transition: 'left 0.2s, top 0.2s, opacity 1s',
           opacity: fadeCursor ? 0 : 1,
         }}
       />
