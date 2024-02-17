@@ -9,6 +9,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
   const nameRef = useRef<HTMLDivElement | null>(null);
 
   const [showName, setShowName] = useState(true);
+  const [fadeCursor, setFadeCursor] = useState(false);
   const [parentOffset, setParentOffset] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -18,6 +19,15 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
     setShowName(true);
     const timer = setTimeout(() => setShowName(false), 3000);
     return () => clearTimeout(timer);
+  }, [cursor]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFadeCursor(true), 15000);
+    return () => clearTimeout(timer);
+  }, [cursor]);
+
+  useEffect(() => {
+    setFadeCursor(false);
   }, [cursor]);
 
   useEffect(() => {
@@ -60,12 +70,14 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           backgroundImage: `url(./images/cursors/cursor${cursorIndex}.png)`,
           backgroundSize: "cover",
           overflow: "hidden",
+          transition: 'opacity 1s',
+          opacity: fadeCursor ? 0 : 1,
         }}
       />
       {showName && (
         <div
           ref={nameRef}
-          className="name"
+          className="nameBox"
           style={{
             position: 'absolute',
             top: cursor.y - parentOffset.y + 26, // Adjust the top position
