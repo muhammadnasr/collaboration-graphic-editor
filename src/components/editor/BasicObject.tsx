@@ -24,7 +24,7 @@ const BasicObject: React.FC<BasicObjectProps> = ({ currentUserId, object, onMovi
 
   return (
     <Draggable
-      disabled={object.selectedBy && object.selectedBy !== currentUserId ? true : false}
+      disabled={object.selectedBy!==null && object.selectedBy !== currentUserId }
       nodeRef={nodeRef}
       position={position}
       onStart={(_e, data) => {
