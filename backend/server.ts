@@ -93,7 +93,9 @@ io.on("connection", (socket: Socket) => {
       }
       return object;
     });
-    socket.to(`design ${designId}`).emit("design", DESIGNS[designId]);
+    //use in to send to all clients in the room (including sender)
+    io.to(`design ${designId}`).emit("design", DESIGNS[designId]);
+    //TODO: emit only changed object not the whole design
   });
 
   // handle design cursor updates
@@ -105,7 +107,7 @@ io.on("connection", (socket: Socket) => {
     }
     //TODO: emit changed cursor only...
     DESIGNS[designId].cursors[updatedCursor.userId] = updatedCursor;
-    socket.to(`design ${designId}`).emit("design", DESIGNS[designId]);
+    io.to(`design ${designId}`).emit("design", DESIGNS[designId]);
   });
 
   socket.on("disconnect", () => {

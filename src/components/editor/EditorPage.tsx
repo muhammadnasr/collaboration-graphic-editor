@@ -3,6 +3,7 @@ import { useStore } from "../../stores/main";
 import io, { Socket } from "socket.io-client";
 import { DesignObject, Design, Cursor } from "../../types";
 import BasicEditor from "./BasicEditor";
+import MoveCommand from "../../history/MoveCommand";
 
 interface EditorPageProps {
   designId: string;
@@ -21,8 +22,25 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
   const design = useStore((state) => state.design);
   const setDesign = useStore((state) => state.setDesign);
   const leaveDesign = useStore((state) => state.leaveDesign);
+  const historyManager = useStore((state) => state.historyManager);
 
   const serverSocket = useRef<Socket | null>(null);
+
+  const updateObjectOnServer = (designId: string, updatedObject: any) => {
+    if (updatedObject) {
+      console.log("Update historyManager", historyManager);
+      serverSocket.current?.emit("updateObject", designId, updatedObject);
+    }
+  }
+  const undo = () => {
+    const updatedObject: DesignObject | null = historyManager.undo();
+    updateObjectOnServer(designId, updatedObject);
+  }
+
+  const redo = () => {
+    const updatedObject: DesignObject | null = historyManager.redo();
+    updateObjectOnServer(designId, updatedObject);
+  }
 
   const handleLeaveDesign = () => {
     leaveDesign();
@@ -30,9 +48,16 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
     serverSocket.current = null;
   };
 
-  const handleObjectUpdate = (updatedObject: DesignObject) => {
-    if (design === null) return;
-    serverSocket.current?.emit("updateObject", designId, updatedObject);
+  const handleObjectMoving = (updatedObject: DesignObject) => {
+    if (!design === null) return;
+    updateObjectOnServer(designId, updatedObject);
+  };
+
+  const handleObjectMoved = (oldObject: DesignObject, updatedObject: DesignObject) => {
+    if (!design === null) return;
+    const moveCommand = new MoveCommand(oldObject, updatedObject);
+    historyManager.executeCommand(moveCommand);
+    updateObjectOnServer(designId, updatedObject);
   };
 
   const handleCursorUpdate = (updatedCursor: Cursor) => {
@@ -49,7 +74,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
 
     socket.on("design", (serverDesign: Design, currentUserId: number) => {
 
-      if(currentUserId){
+      if (currentUserId) {
         setCurrentUserId(currentUserId);
       }
       if (serverDesign.id && serverDesign.id !== designId) {
@@ -79,7 +104,15 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
           copy id
         </button>
       </h1>
-      <BasicEditor currentUserId={currentUserId} design={design} onObjectUpdate={handleObjectUpdate} onCursorUpdate={handleCursorUpdate} />
+      <button onClick={undo} disabled={historyManager.nothingToUndo()}>Undo</button>
+      <button onClick={redo} disabled={historyManager.nothingToRedo()}>Redo</button>
+      <BasicEditor
+        currentUserId={currentUserId}
+        design={design}
+        onObjectMoving={handleObjectMoving}
+        onObjectMoved={handleObjectMoved}
+        onCursorUpdate={handleCursorUpdate}
+      />
       <button onClick={handleLeaveDesign}>Leave</button>
     </>
   );

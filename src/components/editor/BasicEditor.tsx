@@ -6,16 +6,22 @@ import CursorContainer from "../Cursor/CursorContainer";
 export interface BasicEditorProps {
   currentUserId: number | null;
   design: Design | null;
-  onObjectUpdate(updatedObject: DesignObject): void;
+  //TODO: use Context API to avoid passing these functions down/up the component tree
+  onObjectMoving(updatedObject: DesignObject): void;
+  onObjectMoved(oldObject: DesignObject, updatedObject: DesignObject): void;
   onCursorUpdate(cursor: Cursor): void;
 }
 
 /**
  * This component is responsible for providing basic editor functionality
  */
-const BasicEditor: React.FC<BasicEditorProps> = ({ currentUserId, design, onObjectUpdate, onCursorUpdate }) => {
-  const handleObjectUpdate = (updatedObject: DesignObject) => {
-    onObjectUpdate(updatedObject);
+const BasicEditor: React.FC<BasicEditorProps> = ({ currentUserId, design, onObjectMoving, onObjectMoved, onCursorUpdate }) => {
+  const handleObjectMoving = (updatedObject: DesignObject) => {
+    onObjectMoving(updatedObject);
+  };
+
+  const handleObjectMoved = (oldObject: DesignObject, updatedObject: DesignObject) => {
+    onObjectMoved(oldObject, updatedObject);
   };
 
   const handleCursorUpdate = (cursor: Cursor) => {
@@ -32,7 +38,8 @@ const BasicEditor: React.FC<BasicEditorProps> = ({ currentUserId, design, onObje
             key={object.id}
             object={object}
             currentUserId={currentUserId as number}
-            onUpdate={handleObjectUpdate}
+            onMoving={handleObjectMoving}
+            onMoved={handleObjectMoved}
           />
         );
       })}

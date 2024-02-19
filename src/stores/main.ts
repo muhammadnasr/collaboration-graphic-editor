@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Design } from "../types";
+import HistoryManager from "../history/HistoryManager";
 
 interface State {
   currentUserId: number | null;
@@ -9,6 +10,7 @@ interface State {
   design: Design | null;
   setDesign: (design: Design) => void;
   leaveDesign: () => void;
+  historyManager: HistoryManager;
 }
 
 export const useStore = create<State>((set) => ({
@@ -19,4 +21,5 @@ export const useStore = create<State>((set) => ({
   design: null,
   setDesign: (design) => set(() => ({ design })),
   leaveDesign: () => set(() => ({ designId: null, design: null })),
+  historyManager: new HistoryManager(),
 }));
