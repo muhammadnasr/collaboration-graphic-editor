@@ -13,13 +13,20 @@ interface State {
   historyManager: HistoryManager;
 }
 
-export const useStore = create<State>((set) => ({
-  currentUserId: null,
-  setCurrentUserId: (currentUserId) => set(() => ({ currentUserId })),
-  designId: null,
-  setDesignId: (designId) => set(() => ({ designId })),
-  design: null,
-  setDesign: (design) => set(() => ({ design })),
-  leaveDesign: () => set(() => ({ designId: null, design: null })),
-  historyManager: new HistoryManager(),
-}));
+export const useStore = create<State>((set) => {
+  const historyManager = new HistoryManager();
+
+  return {
+    currentUserId: null,
+    setCurrentUserId: (userId: number) => set(() => ({ currentUserId: userId })),
+    designId: null,
+    setDesignId: (designId: string) => set(() => ({ designId })),
+    design: null,
+    setDesign: (design: Design) => { 
+      set(() => ({ design }));
+      historyManager.updateObjects(design.objects);
+     },
+    leaveDesign: () => set(() => ({ designId: null, design: null })),
+    historyManager,
+  };
+});

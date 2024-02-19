@@ -3,7 +3,7 @@ import { useStore } from "../../stores/main";
 import io, { Socket } from "socket.io-client";
 import { DesignObject, Design, Cursor } from "../../types";
 import BasicEditor from "./BasicEditor";
-import MoveCommand from "../../history/MoveCommand";
+import Command from "../../history/Command";
 
 interface EditorPageProps {
   designId: string;
@@ -55,8 +55,9 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
 
   const handleObjectMoved = (oldObject: DesignObject, updatedObject: DesignObject) => {
     if (!design === null) return;
-    const moveCommand = new MoveCommand(oldObject, updatedObject);
-    historyManager.executeCommand(moveCommand);
+    //only add command to history if object has actually moved
+    const command = new Command(oldObject, updatedObject);
+    historyManager.executeCommand(command);
     updateObjectOnServer(designId, updatedObject);
   };
 

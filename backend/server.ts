@@ -93,7 +93,7 @@ io.on("connection", (socket: Socket) => {
       }
       return object;
     });
-    //use in to send to all clients in the room (including sender)
+    //use "io.to" to send to all clients in the room (including sender)
     io.to(`design ${designId}`).emit("design", DESIGNS[designId]);
     //TODO: emit only changed object not the whole design
   });

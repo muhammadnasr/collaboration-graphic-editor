@@ -2,7 +2,7 @@
 //TODO: Rename it to Shape or Element
 
 export type DesignObject = {
-  selectedBy?: number | null;
+  selectedBy: number | null;
   id: string;
   type: string;
   top: number;

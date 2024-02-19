@@ -1,7 +1,22 @@
+import { DesignObject } from '../types';
 
-import { DesignObject } from '../types'; // Import the DesignObject type
+export default class Command {
+  constructor(private oldDesignObject: DesignObject, private updatedDesignObject: DesignObject) {
+  }
+  getCurrentUserId(): number | null  {
+    return this.updatedDesignObject.selectedBy;
+  }
 
-export default interface Command {
-  execute(): DesignObject;
-  undo(): DesignObject;
+  getObjectId(): string  {
+    return this.updatedDesignObject.id;
+  }
+
+  execute() {
+    return this.updatedDesignObject
+  }
+
+  undo() {
+    return this.oldDesignObject
+  }
+
 }

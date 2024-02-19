@@ -29,7 +29,7 @@ const CursorContainer: React.FC<CursorContainerProps> = ({ currentUserId, cursor
         if (cursor.userId === currentUserId) {
           return null;
         }
-  
+          
         return <CursorComponent key={cursor.userId} cursor={cursor} />;
       })}
     </>

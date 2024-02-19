@@ -7,13 +7,16 @@ import { useStore } from "../../stores/main";
  */
 const DesignPickerPage: React.FC = () => {
   const setDesignId = useStore((state) => state.setDesignId);
+  const historyManager = useStore((state) => state.historyManager);
   const [newDesignId, setNewDesignId] = useState<string>("");
 
   const handleNewDesignCreate = () => {
     setDesignId("");
+    historyManager.clear();
   };
   const handleJoinDesign = () => {
     setDesignId(newDesignId);
+    historyManager.clear();
   };
 
   return (

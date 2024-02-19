@@ -15,18 +15,8 @@ export interface BasicObjectProps {
  */
 const BasicObject: React.FC<BasicObjectProps> = ({ currentUserId, object, onMoving, onMoved }) => {
   const nodeRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [prevPosition, setPrevPosition] = useState({ x: object.left, y: object.top });
   const [position, setPosition] = useState({ x: object.left, y: object.top });
-
-  useEffect(() => {
-    if (position.x !== prevPosition.x || position.y !== prevPosition.y) {
-      setIsDragging(true);
-    } else {
-      setIsDragging(false);
-    }
-  }, [position.x, position.y, prevPosition.x, prevPosition.y]);
-
 
   useEffect(() => {
     setPosition({ x: object.left, y: object.top });
@@ -41,6 +31,18 @@ const BasicObject: React.FC<BasicObjectProps> = ({ currentUserId, object, onMovi
         setPrevPosition({ x: data.x, y: data.y });
       }}
       onStop={(_e, data) => {
+        if (position.x === prevPosition.x && position.y === prevPosition.y) {
+          if (!object.selectedBy) {
+            object.selectedBy = currentUserId;
+          } else if (object.selectedBy === currentUserId) {
+            object.selectedBy = null;
+          } 
+          //TODO: create a separate event for object selection (instead of onMoving)
+          onMoving({ ...object, left: data.x, top: data.y });
+          return;
+        }
+
+        object.selectedBy = currentUserId;
         onMoved(
           { ...object, left: prevPosition.x, top: prevPosition.y },
           { ...object, left: data.x, top: data.y }
@@ -51,17 +53,6 @@ const BasicObject: React.FC<BasicObjectProps> = ({ currentUserId, object, onMovi
         setPosition({ x: data.x, y: data.y });
         onMoving({ ...object, left: data.x, top: data.y });
         object.selectedBy = currentUserId;
-      }}
-      onMouseDown={() => {
-        if (isDragging) {
-          //disable object selection while dragging
-          return;
-        }
-        if (!object.selectedBy) {
-          object.selectedBy = currentUserId;
-        } else if (object.selectedBy === currentUserId) {
-          object.selectedBy = null;
-        }
       }}
     >
       <div
@@ -87,7 +78,6 @@ const BasicObject: React.FC<BasicObjectProps> = ({ currentUserId, object, onMovi
             fontWeight: "bold",
           }}
         >
-          {isDragging ? "Dragging" : "Not dragging"}
         </span>
       </div>
     </Draggable>
