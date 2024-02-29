@@ -26,7 +26,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
 
   const serverSocket = useRef<Socket | null>(null);
 
-  const updateObjectOnServer = (designId: string, updatedObject: any) => {
+  const updateObjectOnServer = (designId: string, updatedObject: DesignObject) => {
     if (updatedObject) {
       console.log("Update historyManager", historyManager);
       serverSocket.current?.emit("updateObject", designId, updatedObject);
@@ -34,12 +34,16 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
   }
   const undo = () => {
     const updatedObject: DesignObject | null = historyManager.undo();
-    updateObjectOnServer(designId, updatedObject);
+    if (updatedObject !== null) {
+      updateObjectOnServer(designId, updatedObject);
+    }
   }
 
   const redo = () => {
     const updatedObject: DesignObject | null = historyManager.redo();
-    updateObjectOnServer(designId, updatedObject);
+    if (updatedObject !== null) {
+      updateObjectOnServer(designId, updatedObject);
+    }
   }
 
   const handleLeaveDesign = () => {
