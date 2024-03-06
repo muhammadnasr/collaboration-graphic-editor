@@ -1,4 +1,4 @@
-import { DesignObject } from '../types';
+import { DesignObject } from "../types";
 
 export default class Command {
   constructor(private oldDesignObject: DesignObject, private updatedDesignObject: DesignObject) {

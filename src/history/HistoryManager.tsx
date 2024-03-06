@@ -1,5 +1,5 @@
-import { DesignObject } from '../types';
-import Command from './Command';
+import { DesignObject } from "../types";
+import Command from "./Command";
 
 export default class HistoryManager {
 

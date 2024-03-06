@@ -32,7 +32,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
       clearTimeout(showNameBoxTimer);
       clearTimeout(fadeCursorTimer);
     };
-  }, [cursor]);
+  }, [cursor.x,cursor.y]);
 
   useEffect(() => {
     const parentElement = parentRef.current;
@@ -47,14 +47,14 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
       const cursorLeft = cursor.x - nameBoxElement.offsetWidth;
 
       if (cursorRight - parentOffsetX > parentRect.width) {
-        nameBoxElement.style.left = 'auto';
+        nameBoxElement.style.left = "auto";
         nameBoxElement.style.right = `${parentRect.width - cursor.x + parentOffsetX}px`;
       } else if (cursorLeft - parentOffsetX < 0) {
         nameBoxElement.style.left = `${cursor.x - parentOffsetX + CURSOR_NAME_BOX_OFFSET_PX}px`;
-        nameBoxElement.style.right = 'auto';
+        nameBoxElement.style.right = "auto";
       } else {
         nameBoxElement.style.left = `${cursor.x - parentOffsetX + CURSOR_NAME_BOX_OFFSET_PX}px`;
-        nameBoxElement.style.right = 'auto';
+        nameBoxElement.style.right = "auto";
       }
 
       // Adjust the top position of the name element
@@ -66,7 +66,9 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
   const colors = ["#1570EF", "#039855", "#DC6803", "#DD2590", "#7CD4FD"];
 
   return (
-    <div ref={parentRef} style={{ position: "relative" }}>
+    <div ref={parentRef} style={{ 
+      position: "relative",
+      }}>
       <div
         style={{
           position: "absolute",
@@ -76,7 +78,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           height: 26,
           backgroundSize: "cover",
           overflow: "hidden",
-          //transition: 'left 0.2s, top 0.2s, opacity 1s',
+          transition: "left 0.1s, top 0.1s, opacity 1s",
           opacity: fadeCursor ? 0 : 1,
         }}
       >
@@ -87,7 +89,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           ref={nameBoxRef}
           className="nameBox"
           style={{
-            position: 'absolute',
+            position: "absolute",
             color: "white",
             backgroundColor: colors[cursorIndex],
             padding: "8px 16px",
