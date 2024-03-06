@@ -2,13 +2,13 @@ import React, { useEffect, } from "react";
 import { Cursor, CursorsMap } from "../../types";
 import CursorComponent from "./CursorComponent";
 
-export interface CursorContainerProps {
+export interface CursorsContainerProps {
   currentUserId: number;
   cursors: CursorsMap;
   onCursorUpdate(cursor: Cursor): void;
 }
 
-const CursorContainer: React.FC<CursorContainerProps> = ({ currentUserId, cursors, onCursorUpdate }) => {
+const CursorsContainer: React.FC<CursorsContainerProps> = ({ currentUserId, cursors, onCursorUpdate }) => {
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -29,7 +29,7 @@ const CursorContainer: React.FC<CursorContainerProps> = ({ currentUserId, cursor
         if (cursor.userId === currentUserId) {
           return null;
         }
-          
+
         return <CursorComponent key={cursor.userId} cursor={cursor} />;
       })}
     </>
@@ -37,4 +37,4 @@ const CursorContainer: React.FC<CursorContainerProps> = ({ currentUserId, cursor
 
 };
 
-export default CursorContainer;
+export default CursorsContainer;

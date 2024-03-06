@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Cursor } from "../../types";
+import SVGCursor from "./SVGCursor";
 
 const MAX_CURSORS_COUNT = 5;
 const CURSOR_NAME_BOX_OFFSET_PX = 17;
@@ -62,7 +63,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
   }, [showNameBox, cursor]);
 
   const cursorIndex = cursor.userId % MAX_CURSORS_COUNT;
-  const nameBoxBackgroundColors = ["#1570EF", "#039855", "#DC6803", "#DD2590", "#7CD4FD"];
+  const colors = ["#1570EF", "#039855", "#DC6803", "#DD2590", "#7CD4FD"];
 
   return (
     <div ref={parentRef} style={{ position: "relative" }}>
@@ -71,28 +72,25 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           position: "absolute",
           left: cursor.x - parentOffset.x,
           top: cursor.y - parentOffset.y,
-          width: 20,
-          height: 20,
-          backgroundImage: `url(./images/cursors/cursor${cursorIndex}.png)`,
+          width: 26,
+          height: 26,
           backgroundSize: "cover",
           overflow: "hidden",
-          transition: 'left 0.2s, top 0.2s, opacity 1s',
+          //transition: 'left 0.2s, top 0.2s, opacity 1s',
           opacity: fadeCursor ? 0 : 1,
         }}
-      />
+      >
+        <SVGCursor color={colors[cursorIndex]}/>
+      </div>
       {showNameBox && (
         <div
           ref={nameBoxRef}
           className="nameBox"
           style={{
             position: 'absolute',
-            width: 64,
-            height: 32,
             color: "white",
-            backgroundColor: nameBoxBackgroundColors[cursorIndex],
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            backgroundColor: colors[cursorIndex],
+            padding: "8px 16px",
           }}
         >
           User {cursor.userId + 1}

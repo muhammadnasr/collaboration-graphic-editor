@@ -1,7 +1,7 @@
 import React from "react";
 import { Cursor, DesignObject, Design } from "../../types";
 import BasicObject from "./BasicObject";
-import CursorContainer from "../Cursor/CursorContainer";
+import CursorsContainer from "../Cursor/CursorsContainer";
 
 export interface BasicEditorProps {
   currentUserId: number | null;
@@ -43,7 +43,7 @@ const BasicEditor: React.FC<BasicEditorProps> = ({ currentUserId, design, onObje
           />
         );
       })}
-      <CursorContainer currentUserId={currentUserId as number} cursors={design.cursors} onCursorUpdate={handleCursorUpdate} />
+      <CursorsContainer currentUserId={currentUserId as number} cursors={design.cursors} onCursorUpdate={handleCursorUpdate} />
     </div>
   );
 };
