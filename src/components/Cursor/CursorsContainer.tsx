@@ -12,13 +12,22 @@ const CursorsContainer: React.FC<CursorsContainerProps> = ({ currentUserId, curs
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      onCursorUpdate({ userId: currentUserId, x: event.clientX, y: event.clientY });
+      onCursorUpdate({ userId: currentUserId, x: event.clientX + window.scrollX, y: event.clientY + window.scrollY });
+    };
+
+    const handleScroll = (event: Event) => {
+      //TODO: add another event for scroll update and send it to the server 
+      //(maybe we need to store scroll separately from cursor position inside the cursor object)
+      //onCursorScrollUpdate({ userId: currentUserId, x: cursors[currentUserId].x + window.scrollX, y:  + window.scrollY });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
+
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [currentUserId, onCursorUpdate]);
 

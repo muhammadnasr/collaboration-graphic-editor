@@ -22,25 +22,25 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
     const showNameBoxTimer = setTimeout(() => {
       setShowNameBox(false);
     }, 3000);
-  
+
     setFadeCursor(false);
     const fadeCursorTimer = setTimeout(() => {
       setFadeCursor(true);
     }, 15000);
-  
+
     return () => {
       clearTimeout(showNameBoxTimer);
       clearTimeout(fadeCursorTimer);
     };
-  }, [cursor.x,cursor.y]);
+  }, [cursor.x, cursor.y]);
 
   useEffect(() => {
     const parentElement = parentRef.current;
     const nameBoxElement = nameBoxRef.current;
     if (parentElement && nameBoxElement) {
       const parentRect = parentElement.getBoundingClientRect();
-      const parentOffsetX = parentRect.left + window.scrollX;
-      const parentOffsetY = parentRect.top + window.scrollY;
+      const parentOffsetX = parentRect.left;
+      const parentOffsetY = parentRect.top;
       setParentOffset({ x: parentOffsetX, y: parentOffsetY });
 
       const cursorRight = cursor.x + nameBoxElement.offsetWidth;
@@ -66,9 +66,9 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
   const colors = ["#1570EF", "#039855", "#DC6803", "#DD2590", "#7CD4FD"];
 
   return (
-    <div ref={parentRef} style={{ 
+    <div ref={parentRef} style={{
       position: "relative",
-      }}>
+    }}>
       <div
         style={{
           position: "absolute",
@@ -84,7 +84,7 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           opacity: fadeCursor ? 0 : 1,
         }}
       >
-        <SVGCursor color={colors[cursorIndex]}/>
+        <SVGCursor color={colors[cursorIndex]} />
       </div>
       {showNameBox && (
         <div
