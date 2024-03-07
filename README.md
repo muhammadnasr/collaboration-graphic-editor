@@ -1,9 +1,11 @@
-## Welcome to Kittl's full stack assignment for the collaboration team!
+## Welcome to Collaboration Graphic Editor Demo
 
 This project was created with:
 
 - [Create React App](https://github.com/facebook/create-react-app)
 - [Storybook](https://storybook.js.org/)
+- Socket.io
+- Node.js
 
 Consider checking these links before starting the assignment:
 
