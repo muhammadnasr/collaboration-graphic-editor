@@ -78,7 +78,9 @@ const CursorComponent: React.FC<{ cursor: Cursor }> = ({ cursor }) => {
           height: 26,
           backgroundSize: "cover",
           overflow: "hidden",
-          transition: "left 0.1s, top 0.1s, opacity 1s",
+          //TODO: Add threshold for cursor transition to happen only when 
+          //internet is slow and delta is quite large
+          //transition: shouldTransition? "left 0.1s, top 0.1s": "none",
           opacity: fadeCursor ? 0 : 1,
         }}
       >

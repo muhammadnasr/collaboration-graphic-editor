@@ -23,7 +23,6 @@ const SVGCursor: React.FC<SVGCursorProps> = ({ color }) => (
     </defs>
   </svg>
 
-
 );
 
 export default SVGCursor;
