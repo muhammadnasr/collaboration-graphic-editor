@@ -38,6 +38,7 @@ const BasicObject: React.FC<BasicObjectProps> = ({ currentUserId, object, onMovi
             object.selectedBy = null;
           } 
           //TODO: create a separate event for object selection (instead of onMoving)
+          //for ex: onObjectSelected
           onMoving({ ...object, left: data.x, top: data.y });
           return;
         }

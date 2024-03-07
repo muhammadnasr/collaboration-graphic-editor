@@ -16,19 +16,28 @@ const SERVER_URL = "http://localhost:3030";
  * or creating a new one
  */
 const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
-  const currentUserId = useStore((state) => state.currentUserId);
-  const setCurrentUserId = useStore((state) => state.setCurrentUserId);
-  const setDesignId = useStore((state) => state.setDesignId);
-  const design = useStore((state) => state.design);
-  const setDesign = useStore((state) => state.setDesign);
-  const leaveDesign = useStore((state) => state.leaveDesign);
-  const historyManager = useStore((state) => state.historyManager);
+  const {
+    currentUserId,
+    setCurrentUserId,
+    setDesignId,
+    design,
+    setDesign,
+    leaveDesign,
+    historyManager,
+  } = useStore((state) => ({
+    currentUserId: state.currentUserId,
+    setCurrentUserId: state.setCurrentUserId,
+    setDesignId: state.setDesignId,
+    design: state.design,
+    setDesign: state.setDesign,
+    leaveDesign: state.leaveDesign,
+    historyManager: state.historyManager,
+  }));
 
   const serverSocket = useRef<Socket | null>(null);
 
   const updateObjectOnServer = (designId: string, updatedObject: DesignObject) => {
     if (updatedObject) {
-      console.log("Update historyManager", historyManager);
       serverSocket.current?.emit("updateObject", designId, updatedObject);
     }
   }
@@ -52,6 +61,7 @@ const EditorPage: React.FC<EditorPageProps> = ({ designId }) => {
     serverSocket.current = null;
   };
 
+  //TODO: extract to hooks
   const handleObjectMoving = (updatedObject: DesignObject) => {
     if (!design === null) return;
     updateObjectOnServer(designId, updatedObject);
